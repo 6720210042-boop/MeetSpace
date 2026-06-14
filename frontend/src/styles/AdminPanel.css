@@ -1,0 +1,72 @@
+/* AdminPanel.css */
+.admin-panel-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.admin-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px 40px;
+}
+
+.admin-header h1 {
+  font-size: 28px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.admin-header p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  padding: 20px 40px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  flex-wrap: wrap;
+}
+
+.admin-tabs button {
+  padding: 10px 20px;
+  background-color: #f5f5f5;
+  color: #666;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+}
+
+.admin-tabs button.active {
+  background-color: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.admin-tabs button:hover {
+  background-color: #e9ecef;
+}
+
+.admin-content {
+  padding: 30px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 20px;
+  }
+  
+  .admin-tabs {
+    padding: 15px 20px;
+  }
+  
+  .admin-content {
+    padding: 20px;
+  }
+}

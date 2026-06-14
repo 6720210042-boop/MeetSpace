@@ -1,0 +1,26 @@
+{
+  "name": "meetspace-backend",
+  "version": "1.0.0",
+  "description": "MeetSpace - University Meeting Room Booking System Backend",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed": "node src/scripts/seedUsers.js",
+    "migrate": "node src/scripts/migrateMySQL.js",
+    "seed:rooms": "node src/scripts/seedRooms.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "mongoose": "^7.0.3",
+    "jsonwebtoken": "^9.0.0",
+    "bcryptjs": "^2.4.3",
+    "mysql2": "^3.3.0",
+    "google-auth-library": "^8.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
