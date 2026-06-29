@@ -9,6 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: meetspace
     ports:
+<<<<<<< HEAD
       # Map container port 3306 to host port 3306 to allow connection from host if needed
       - "3306:3306"
     volumes:
@@ -17,6 +18,14 @@ services:
       - meetspace-network
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+=======
+      # Map container port 3306 to host port 3307 to avoid clashing with your local MySQL
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+>>>>>>> eb1e797fbc47bd4c9e37c6b3a40eca0071672658
       timeout: 20s
       retries: 10
 
@@ -37,15 +46,19 @@ services:
     depends_on:
       db:
         condition: service_healthy
+<<<<<<< HEAD
     networks:
       - meetspace-network
       - course_proxy
+=======
+>>>>>>> eb1e797fbc47bd4c9e37c6b3a40eca0071672658
 
   frontend:
     build: ./frontend
     container_name: meetspace-frontend
     restart: unless-stopped
     ports:
+<<<<<<< HEAD
       # Map frontend to port 8003 (http://localhost:8003)
       - "8003:80"
     depends_on:
@@ -62,3 +75,12 @@ networks:
     driver: bridge
   course_proxy:
     external: true
+=======
+      # Map frontend to port 80 (http://localhost)
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
+>>>>>>> eb1e797fbc47bd4c9e37c6b3a40eca0071672658
