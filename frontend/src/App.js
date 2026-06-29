@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import Login from './pages/Login';
@@ -9,7 +9,7 @@ import Navigation from './components/Navigation';
 import './App.css';
 
 function App() {
-  const { user, token, login, logout, isAuthenticated } = useAuth();
+  const { user, login, logout, isAuthenticated } = useAuth();
 
   const handleLogin = (userData, authToken) => {
     login(userData, authToken);

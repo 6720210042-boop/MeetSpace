@@ -1,15 +1,37 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const reportController = require('../controllers/reportController');
-const { verifyToken, isAdmin } = require('../middleware/auth');
 
-// GET /api/reports/statistics (Admin only)
-router.get('/statistics', verifyToken, isAdmin, reportController.getUsageStats);
+const reportController = require("../controllers/reportController");
+const { verifyToken, isAdmin } = require("../middleware/auth");
 
-// GET /api/reports/utilization (Admin only)
-router.get('/utilization', verifyToken, isAdmin, reportController.getRoomUtilization);
+// ==========================
+// Statistics
+// ==========================
+router.get("/statistics", verifyToken, isAdmin, reportController.getUsageStats);
 
-// GET /api/reports/activity (Admin only)
-router.get('/activity', verifyToken, isAdmin, reportController.getUserActivity);
+// ==========================
+// Room Utilization
+// ==========================
+router.get(
+  "/utilization",
+  verifyToken,
+  isAdmin,
+  reportController.getRoomUtilization,
+);
+
+// ==========================
+// User Activity
+// ==========================
+router.get("/activity", verifyToken, isAdmin, reportController.getUserActivity);
+
+// ==========================
+// Booking Report
+// ==========================
+router.get(
+  "/bookings",
+  verifyToken,
+  isAdmin,
+  reportController.getBookingReport,
+);
 
 module.exports = router;

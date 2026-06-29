@@ -12,8 +12,18 @@ export const authService = {
     return response.data;
   },
 
+  googleLogin: async (credential, profile = {}) => {
+    const response = await api.post('/auth/google', { credential, ...profile });
+    return response.data;
+  },
+
   getCurrentUser: async () => {
     const response = await api.get('/auth/me');
+    return response.data;
+  },
+
+  updateProfile: async (profile) => {
+    const response = await api.put('/auth/profile', profile);
     return response.data;
   },
 
@@ -92,6 +102,11 @@ export const bookingService = {
 
   checkInBooking: async (id) => {
     const response = await api.post(`/university-bookings/${id}/checkin`);
+    return response.data;
+  },
+
+  markNoShow: async (id) => {
+    const response = await api.put(`/university-bookings/${id}/no-show`);
     return response.data;
   }
 };

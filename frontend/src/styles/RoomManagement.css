@@ -1,208 +1,218 @@
 /* RoomManagement.css */
 .room-management {
   background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
 }
 
 .management-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #f0f0f0;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--bg);
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .management-header h2 {
   margin: 0;
-  font-size: 24px;
-  color: #333;
+  font-size: 20px;
+  color: var(--text-primary);
 }
 
 .btn-add {
   padding: 10px 20px;
-  background-color: #28a745;
+  background: var(--gradient-main);
   color: white;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 3px 10px rgba(92, 107, 192, 0.3);
 }
 
 .btn-add:hover {
-  background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(92, 107, 192, 0.4);
 }
 
+/* Alert */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  font-weight: 500;
+  font-size: 14px;
+}
+.alert-success {
+  background: var(--success-light);
+  color: #2e7d32;
+  border-left: 4px solid var(--success);
+}
+.alert-error {
+  background: var(--danger-light);
+  color: #c62828;
+  border-left: 4px solid var(--danger);
+}
+
+/* Form */
 .room-form {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 30px;
+  background: var(--bg);
+  padding: 24px;
+  border-radius: var(--radius);
+  margin-bottom: 28px;
+  border: 1.5px solid var(--border);
 }
 
 .room-form h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #333;
+  margin: 0 0 20px 0;
+  font-size: 17px;
+  color: var(--text-primary);
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-bottom: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
+  gap: 6px;
+}
+
+/* Equipment grid */
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
   gap: 8px;
 }
 
-.form-group label {
-  font-weight: 600;
-  color: #333;
-  font-size: 14px;
-}
-
-.form-group input,
-.form-group textarea {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #667eea;
-}
-
-.checkbox-group {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-}
-
-.checkbox-group label {
+.checkbox-label {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
   cursor: pointer;
-  font-weight: normal;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.checkbox-label:hover { border-color: var(--primary); background: var(--primary-glow); }
+.checkbox-label input[type="checkbox"] {
+  width: 16px; height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary);
+  padding: 0;
+  flex-shrink: 0;
 }
 
 .form-actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: flex-end;
   margin-top: 20px;
 }
 
 .btn-cancel {
-  padding: 10px 20px;
-  background-color: #e9ecef;
-  color: #333;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
+  padding: 10px 22px;
+  background: white;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
   font-weight: 600;
 }
+.btn-cancel:hover { background: var(--bg); transform: none; box-shadow: none; }
 
 .btn-submit {
-  padding: 10px 20px;
-  background-color: #667eea;
+  padding: 10px 22px;
+  background: var(--gradient-main);
   color: white;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(92, 107, 192, 0.3);
 }
+.btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(92, 107, 192, 0.4); }
 
-.btn-submit:hover {
-  background-color: #5568d3;
-}
-
+/* Table */
 .rooms-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  font-size: 14px;
 }
 
-.rooms-table thead {
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #ddd;
-}
+.rooms-table thead { background: var(--bg); }
 
 .rooms-table th {
-  padding: 15px;
+  padding: 12px 14px;
   text-align: left;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
 }
 
 .rooms-table td {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  color: #666;
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: middle;
 }
 
-.rooms-table tbody tr:hover {
-  background-color: #f8f9fa;
-}
+.rooms-table tbody tr:hover { background: var(--bg); }
 
+/* Status */
 .status {
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 4px 10px;
+  border-radius: 10px;
   font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-weight: 700;
+  white-space: nowrap;
 }
+.status.available { background: #e8f5e9; color: #2e7d32; }
+.status.occupied { background: #ffebee; color: #c62828; }
+.status.maintenance { background: #fffbeb; color: #b45309; }
 
-.status.available {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-.status.occupied {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
-.status.maintenance {
-  background-color: #fff3cd;
-  color: #856404;
-}
-
-.btn-edit,
-.btn-delete {
+/* Action buttons */
+.btn-edit, .btn-delete {
   padding: 6px 12px;
-  margin-right: 5px;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
   font-weight: 600;
+  margin-right: 6px;
+  transition: all 0.2s;
 }
+.btn-edit { background: var(--primary-glow); color: var(--primary-dark); border: 1px solid rgba(92, 107, 192, 0.25); }
+.btn-edit:hover { background: var(--primary); color: white; transform: none; }
+.btn-delete { background: #ffebee; color: var(--danger); border: 1px solid rgba(229, 57, 53, 0.2); }
+.btn-delete:hover { background: var(--danger); color: white; transform: none; }
 
-.btn-edit {
-  background-color: #007bff;
-  color: white;
+/* Equipment tags in table */
+.eq-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.eq-tag {
+  background: var(--primary-glow);
+  color: var(--primary-dark);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
 }
+.eq-none { color: var(--text-muted); font-size: 13px; }
 
-.btn-edit:hover {
-  background-color: #0056b3;
-}
-
-.btn-delete {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-delete:hover {
-  background-color: #c82333;
+@media (max-width: 600px) {
+  .room-management { padding: 16px; }
+  .form-grid { grid-template-columns: 1fr; }
 }

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/AdminPanel.css';
-import { roomService, reportService } from '../services';
+import { reportService } from '../services';
 import RoomManagement from '../components/RoomManagement';
 import ReportsDashboard from '../components/ReportsDashboard';
+import NoShowManagement from '../components/NoShowManagement';
+import AdminBookings from '../components/AdminBookings';
 
 const AdminPanel = ({ user }) => {
-  const [activeTab, setActiveTab] = useState('rooms');
+  const [activeTab, setActiveTab] = useState('bookings');
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -39,13 +41,25 @@ const AdminPanel = ({ user }) => {
       </header>
 
       <div className="admin-tabs">
-        <button 
+        <button
+          className={activeTab === 'bookings' ? 'active' : ''}
+          onClick={() => setActiveTab('bookings')}
+        >
+          📋 รายการจองทั้งหมด
+        </button>
+        <button
           className={activeTab === 'rooms' ? 'active' : ''}
           onClick={() => setActiveTab('rooms')}
         >
-          📋 จัดการห้อง
+          🏢 จัดการห้อง
         </button>
-        <button 
+        <button
+          className={activeTab === 'noshow' ? 'active' : ''}
+          onClick={() => setActiveTab('noshow')}
+        >
+          ⏰ เลยเวลา (No-Show)
+        </button>
+        <button
           className={activeTab === 'reports' ? 'active' : ''}
           onClick={() => setActiveTab('reports')}
         >
@@ -54,7 +68,9 @@ const AdminPanel = ({ user }) => {
       </div>
 
       <div className="admin-content">
+        {activeTab === 'bookings' && <AdminBookings />}
         {activeTab === 'rooms' && <RoomManagement />}
+        {activeTab === 'noshow' && <NoShowManagement />}
         {activeTab === 'reports' && <ReportsDashboard stats={stats} loading={loading} />}
       </div>
     </div>

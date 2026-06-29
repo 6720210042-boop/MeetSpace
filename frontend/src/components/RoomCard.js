@@ -1,52 +1,64 @@
 import React from 'react';
 import '../styles/RoomCard.css';
 
+const STATUS_MAP = {
+  available: { color: 'green', label: '✅ ว่าง' },
+  occupied:  { color: 'red',   label: '🔴 ไม่ว่าง' },
+  maintenance: { color: 'orange', label: '🔧 ปิดปรับปรุง' },
+};
+
+const EQUIPMENT_LABELS = {
+  projector: '🎥 โปรเจคเตอร์',
+  whiteboard: '✍️ ไวท์บอร์ด',
+  videoConferencing: '📹 วิดีโอคอล',
+  wifi: '📡 WiFi',
+  airConditioning: '❄️ แอร์',
+  microphone: '🎤 ไมโครโฟน',
+};
+
 const RoomCard = ({ room, onBook }) => {
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'available': return 'green';
-      case 'occupied': return 'red';
-      case 'maintenance': return 'orange';
-      default: return 'gray';
-    }
-  };
+  const statusInfo = STATUS_MAP[room.status] || { color: 'gray', label: room.status };
+  const activeEquipment = room.equipment
+    ? Object.entries(room.equipment).filter(([, v]) => v === true).map(([k]) => k)
+    : [];
 
   return (
-    <div className="room-card">
-      <div className="room-header">
-        <h3>{room.name}</h3>
-        <span className={`status-indicator ${getStatusColor(room.status)}`}>
-          {room.status === 'available' ? 'ว่าง' : room.status === 'occupied' ? 'ใช้งาน' : 'ปิดปรับปรุง'}
-        </span>
-      </div>
+    <div className={`room-card ${room.status || 'available'}`}>
+      <div className="room-card-body">
+        <div className="room-header">
+          <h3>{room.name}</h3>
+          <span className={`status-indicator ${statusInfo.color}`}>
+            {statusInfo.label}
+          </span>
+        </div>
 
-      <div className="room-info">
-        <p><strong>📍 อาคาร:</strong> {room.building}, ชั้น {room.floor}</p>
-        <p><strong>👥 ความจุ:</strong> {room.capacity} คน</p>
-        
+        <div className="room-info">
+          <p>📍 {room.building}{room.floor ? `, ชั้น ${room.floor}` : ''}</p>
+          <p>👥 รองรับ <strong>{room.capacity}</strong> คน</p>
+        </div>
+
         {room.description && (
-          <p><strong>📝 คำอธิบาย:</strong> {room.description}</p>
+          <div className="room-description">{room.description}</div>
         )}
 
-        <div className="equipment-list">
-          <strong>อุปกรณ์:</strong>
-          <div className="equipment-tags">
-            {room.equipment?.projector && <span className="tag">🎥 โปรเจคเตอร์</span>}
-            {room.equipment?.whiteboard && <span className="tag">✍️ กระดานไวท์บอร์ด</span>}
-            {room.equipment?.videoConferencing && <span className="tag">📹 วิดีโอคอล</span>}
-            {room.equipment?.wifi && <span className="tag">📡 WiFi</span>}
-            {room.equipment?.airConditioning && <span className="tag">❄️ แอร์</span>}
-            {room.equipment?.microphone && <span className="tag">🎤 ไมโครโฟน</span>}
+        {activeEquipment.length > 0 && (
+          <div className="equipment-list">
+            <span>อุปกรณ์</span>
+            <div className="equipment-tags">
+              {activeEquipment.map(k => (
+                <span key={k} className="tag">{EQUIPMENT_LABELS[k] || k}</span>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      <button 
+      <button
         className="book-btn"
         onClick={onBook}
         disabled={room.status !== 'available'}
       >
-        {room.status === 'available' ? '📅 จองตอนนี้' : 'ไม่สามารถใช้ได้'}
+        {room.status === 'available' ? '📅 จองห้องนี้' : 'ไม่สามารถจองได้'}
       </button>
     </div>
   );
