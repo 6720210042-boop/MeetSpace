@@ -1,27 +1,41 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bookingController = require('../controllers/bookingController');
-const { verifyToken, isAdmin } = require('../middleware/auth');
 
-// POST /api/university-bookings
-router.post('/', verifyToken, bookingController.createBooking);
+const bookingController = require("../controllers/bookingController");
+const { verifyToken, isAdmin } = require("../middleware/auth");
 
-// GET /api/university-bookings
-router.get('/', verifyToken, bookingController.getAllBookings);
+// =========================
+// Booking
+// =========================
 
-// GET /api/university-bookings/my
-router.get('/my/bookings', verifyToken, bookingController.getUserBookings);
+// Create booking
+router.post("/", verifyToken, bookingController.createBooking);
 
-// GET /api/university-bookings/:id
-router.get('/:id', verifyToken, bookingController.getBookingById);
+// Get all bookings (Admin)
+router.get("/", verifyToken, isAdmin, bookingController.getAllBookings);
 
-// PUT /api/university-bookings/:id
-router.put('/:id', verifyToken, bookingController.updateBooking);
+// Get my bookings
+router.get("/my/bookings", verifyToken, bookingController.getUserBookings);
 
-// DELETE /api/university-bookings/:id
-router.delete('/:id', verifyToken, bookingController.cancelBooking);
+// Dashboard statistics
+router.get("/stats/dashboard", verifyToken, bookingController.getBookingStats);
 
-// POST /api/university-bookings/:id/checkin
-router.post('/:id/checkin', verifyToken, bookingController.checkInBooking);
+// Get booking by ID
+router.get("/:id", verifyToken, bookingController.getBookingById);
+
+// Update booking
+router.put("/:id", verifyToken, bookingController.updateBooking);
+
+// Cancel booking
+router.delete("/:id", verifyToken, bookingController.cancelBooking);
+
+// Check-in
+router.post("/:id/checkin", verifyToken, bookingController.checkInBooking);
+
+// Check-out
+router.put("/:id/check-out", verifyToken, bookingController.checkOutBooking);
+
+// Mark no-show after staff cannot contact requester
+router.put("/:id/no-show", verifyToken, isAdmin, bookingController.markNoShow);
 
 module.exports = router;

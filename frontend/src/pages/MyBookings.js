@@ -2,11 +2,38 @@ import React, { useState, useEffect } from 'react';
 import '../styles/MyBookings.css';
 import { bookingService } from '../services';
 
+const STATUS_LABEL = {
+  confirmed: { text: 'ยืนยันแล้ว', cls: 'confirmed' },
+  pending: { text: 'รอดำเนินการ', cls: 'pending' },
+  cancelled: { text: 'ยกเลิกแล้ว', cls: 'cancelled' },
+  'in-use': { text: 'กำลังใช้งาน', cls: 'in-use' },
+  completed: { text: 'เสร็จสิ้น', cls: 'completed' },
+  'no-show': { text: 'ไม่มาตามนัด', cls: 'no-show' },
+};
+
+function formatThaiDateTime(dateStr) {
+  if (!dateStr) return '-';
+  return new Date(dateStr).toLocaleString('th-TH', {
+    year: 'numeric', month: 'long', day: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+    timeZone: 'Asia/Bangkok',
+  });
+}
+
+function formatThaiTime(dateStr) {
+  if (!dateStr) return '-';
+  return new Date(dateStr).toLocaleTimeString('th-TH', {
+    hour: '2-digit', minute: '2-digit',
+    timeZone: 'Asia/Bangkok',
+  });
+}
+
 const MyBookings = ({ user }) => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [cancellingId, setCancellingId] = useState(null);
 
   useEffect(() => {
     fetchUserBookings();
@@ -15,8 +42,9 @@ const MyBookings = ({ user }) => {
   const fetchUserBookings = async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await bookingService.getUserBookings();
-      setBookings(response.bookings);
+      setBookings(response.bookings || []);
     } catch (err) {
       setError('ไม่สามารถโหลดรายการการจองได้');
       console.error(err);
@@ -26,34 +54,27 @@ const MyBookings = ({ user }) => {
   };
 
   const handleCancelBooking = async (bookingId) => {
-    if (window.confirm('Are you sure you want to cancel this booking?')) {
-      try {
-        await bookingService.cancelBooking(bookingId);
-        setBookings(bookings.filter(b => b.id !== bookingId));
-        alert('Booking cancelled successfully');
-      } catch (err) {
-        alert('Failed to cancel booking');
-      }
-    }
-  };
-
-  const handleCheckIn = async (bookingId) => {
+    if (!window.confirm('ยืนยันการยกเลิกการจองนี้?')) return;
+    setCancellingId(bookingId);
     try {
-      await bookingService.checkInBooking(bookingId);
-      fetchUserBookings();
-      alert('Check-in successful');
+      await bookingService.cancelBooking(bookingId);
+      setBookings(prev => prev.map(b =>
+        b.id === bookingId ? { ...b, status: 'cancelled' } : b
+      ));
     } catch (err) {
-      alert('Failed to check in');
+      alert(err.response?.data?.message || 'ยกเลิกไม่สำเร็จ');
+    } finally {
+      setCancellingId(null);
     }
   };
 
   const getFilteredBookings = () => {
     const now = new Date();
-    switch(filter) {
+    switch (filter) {
       case 'upcoming':
-        return bookings.filter(b => new Date(b.startTime) > now && b.status !== 'cancelled');
+        return bookings.filter(b => new Date(b.startTime) > now && !['cancelled','completed','no-show'].includes(b.status));
       case 'past':
-        return bookings.filter(b => new Date(b.endTime) < now);
+        return bookings.filter(b => new Date(b.endTime) < now || ['completed','no-show'].includes(b.status));
       case 'cancelled':
         return bookings.filter(b => b.status === 'cancelled');
       default:
@@ -61,89 +82,87 @@ const MyBookings = ({ user }) => {
     }
   };
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleString();
-  };
-
-  if (loading) {
-    return <div className="mybookings-container"><p>กำลังโหลด...</p></div>;
+  const canCancel = (b) => {
+    return ['confirmed','pending'].includes(b.status) && new Date(b.startTime) > new Date();
   };
 
   const filteredBookings = getFilteredBookings();
 
   return (
     <div className="mybookings-container">
-      <h1>การจองของฉัน</h1>
+      <h1>📋 การจองของฉัน</h1>
 
       {error && <div className="error-alert">{error}</div>}
 
       <div className="filter-tabs">
-        <button 
-          className={filter === 'all' ? 'active' : ''}
-          onClick={() => setFilter('all')}
-        >
+        <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>
           ทั้งหมด ({bookings.length})
         </button>
-        <button 
-          className={filter === 'upcoming' ? 'active' : ''}
-          onClick={() => setFilter('upcoming')}
-        >
-          การจองที่กำลังจะมาถึง
+        <button className={filter === 'upcoming' ? 'active' : ''} onClick={() => setFilter('upcoming')}>
+          ที่กำลังจะมาถึง
         </button>
-        <button 
-          className={filter === 'past' ? 'active' : ''}
-          onClick={() => setFilter('past')}
-        >
-          การจองที่ผ่านมา
+        <button className={filter === 'past' ? 'active' : ''} onClick={() => setFilter('past')}>
+          ผ่านมาแล้ว
         </button>
-        <button 
-          className={filter === 'cancelled' ? 'active' : ''}
-          onClick={() => setFilter('cancelled')}
-        >
-          การจองที่ถูกยกเลิก
+        <button className={filter === 'cancelled' ? 'active' : ''} onClick={() => setFilter('cancelled')}>
+          ยกเลิกแล้ว
         </button>
       </div>
 
-      {filteredBookings.length === 0 ? (
-        <p className="no-bookings">ยังไม่มีการจอง</p>
+      {loading ? (
+        <div className="loading-text">กำลังโหลดรายการการจอง...</div>
+      ) : filteredBookings.length === 0 ? (
+        <p className="no-bookings">ไม่มีรายการการจอง</p>
       ) : (
         <div className="bookings-list">
-          {filteredBookings.map(booking => (
-            <div key={booking.id} className="booking-card">
-              <div className="booking-header">
-                <h3>{booking.roomName || 'Unknown Room'}</h3>
-                <span className={`status-badge ${booking.status}`}>
-                  {booking.status}
-                </span>
-              </div>
+          {filteredBookings.map(booking => {
+            const statusInfo = STATUS_LABEL[booking.status] || { text: booking.status, cls: '' };
+            return (
+              <div key={booking.id} className={`booking-card ${booking.status}`}>
+                <div className="booking-header">
+                  <h3>🏢 {booking.roomName || 'ห้องประชุม'}</h3>
+                  <span className={`status-badge ${statusInfo.cls}`}>
+                    {statusInfo.text}
+                  </span>
+                </div>
 
-              <div className="booking-details">
-                <p><strong>เริ่ม:</strong> {formatDate(booking.startTime)}</p>
-                <p><strong>สิ้นสุด:</strong> {formatDate(booking.endTime)}</p>
-                <p><strong>วัตถุประสงค์:</strong> {booking.purpose}</p>
-                <p><strong>ผู้เข้าร่วม:</strong> {booking.numberOfParticipants}</p>
-              </div>
+                <div className="booking-details">
+                  <div className="detail-row">
+                    <span>📍</span>
+                    <span>{booking.building || '-'}{booking.floor ? ` ชั้น ${booking.floor}` : ''}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span>📅</span>
+                    <span>{formatThaiDateTime(booking.startTime)}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span>⏱</span>
+                    <span>{formatThaiTime(booking.startTime)} – {formatThaiTime(booking.endTime)} น.</span>
+                  </div>
+                  <div className="detail-row">
+                    <span>🎯</span>
+                    <span>{booking.purpose}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span>👥</span>
+                    <span>{booking.numberOfParticipants} คน</span>
+                  </div>
+                </div>
 
-              <div className="booking-actions">
-                {booking.status === 'confirmed' && new Date(booking.startTime) > new Date() && (
-                  <>
-                    <button 
-                      className="btn-checkin"
-                      onClick={() => handleCheckIn(booking.id)}
-                    >
-                      เช็คอิน
-                    </button>
-                    <button 
-                      className="btn-cancel"
+                {canCancel(booking) && (
+                  <div className="booking-actions">
+                    <button
+                      className="btn-cancel-booking"
                       onClick={() => handleCancelBooking(booking.id)}
+                      disabled={cancellingId === booking.id}
                     >
-                      ยกเลิก
+                      {cancellingId === booking.id ? '⏳ กำลังยกเลิก...' : '🚫 ยกเลิกการจอง'}
                     </button>
-                  </>
+                  </div>
                 )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

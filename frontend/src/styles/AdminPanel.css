@@ -1,72 +1,73 @@
 /* AdminPanel.css */
 .admin-panel-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: var(--bg);
 }
 
 .admin-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-main);
   color: white;
-  padding: 30px 40px;
+  padding: 28px 40px;
+  box-shadow: 0 4px 20px rgba(92, 107, 192, 0.3);
 }
 
 .admin-header h1 {
-  font-size: 28px;
-  margin: 0;
-  margin-bottom: 10px;
+  font-size: 26px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 4px;
 }
 
 .admin-header p {
-  margin: 0;
-  opacity: 0.9;
+  opacity: 0.8;
+  font-size: 14px;
 }
 
 .admin-tabs {
   display: flex;
-  gap: 10px;
-  padding: 20px 40px;
+  gap: 4px;
+  padding: 0 32px;
   background: white;
-  border-bottom: 1px solid #ddd;
-  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
 }
 
 .admin-tabs button {
-  padding: 10px 20px;
-  background-color: #f5f5f5;
-  color: #666;
-  border: 2px solid transparent;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s;
+  padding: 14px 20px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
   font-weight: 600;
-}
-
-.admin-tabs button.active {
-  background-color: #667eea;
-  color: white;
-  border-color: #667eea;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  box-shadow: none;
 }
 
 .admin-tabs button:hover {
-  background-color: #e9ecef;
+  color: var(--primary);
+  background: var(--primary-glow);
+  transform: none;
+  box-shadow: none;
+}
+
+.admin-tabs button.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  background: transparent;
 }
 
 .admin-content {
-  padding: 30px 40px;
+  padding: 28px 32px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
 @media (max-width: 768px) {
-  .admin-header {
-    padding: 20px;
-  }
-  
-  .admin-tabs {
-    padding: 15px 20px;
-  }
-  
-  .admin-content {
-    padding: 20px;
-  }
+  .admin-header { padding: 20px; }
+  .admin-tabs { padding: 0 16px; }
+  .admin-content { padding: 20px 16px; }
 }

@@ -4,7 +4,7 @@ export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const error = null;
 
   useEffect(() => {
     // Check if user is already logged in
