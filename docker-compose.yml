@@ -8,9 +8,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: meetspace
-    ports:
-      # Map container port 3306 to host port 3306 to allow connection from host if needed
-      - "3306:3306"
+    # ports: ลบออกเพื่อความปลอดภัย - MySQL ไม่ควร expose ออกนอก Docker network
+    #   - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -24,8 +23,8 @@ services:
     build: ./backend
     container_name: g03_backend
     restart: unless-stopped
-    ports:
-      - "5001:5001"
+    # ports: ลบออกเพื่อความปลอดภัย - Backend เข้าถึงได้ผ่าน reverse proxy (course_proxy) เท่านั้น
+    #   - "5001:5001"
     environment:
       - PORT=5001
       - MYSQL_HOST=db
