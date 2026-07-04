@@ -11,7 +11,7 @@ RUN npm install
 COPY . .
 
 # Set environment variable for the backend API URL during build
-ENV REACT_APP_API_URL=http://localhost:5001/api
+ENV REACT_APP_API_URL=/api
 
 # Build the React app
 RUN npm run build
@@ -26,6 +26,12 @@ COPY --from=build /app/build /usr/share/nginx/html
 # Replace default Nginx config to support React Router (SPA fallback)
 RUN echo 'server { \
     listen 80; \
+    location /api { \
+        proxy_pass http://g03_backend:5001; \
+        proxy_http_version 1.1; \
+        proxy_set_header Host $host; \
+        proxy_set_header X-Real-IP $remote_addr; \
+    } \
     location / { \
         root /usr/share/nginx/html; \
         index index.html index.htm; \
