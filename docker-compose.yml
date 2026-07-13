@@ -42,7 +42,7 @@ services:
 
   frontend:
     build: ./frontend
-    container_name: g03_frontend
+    container_name: g03_app
     restart: unless-stopped
     ports:
       # Map frontend to port 8003 (http://localhost:8003)
