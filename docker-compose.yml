@@ -8,8 +8,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: meetspace
-    # ports: ลบออกเพื่อความปลอดภัย - MySQL ไม่ควร expose ออกนอก Docker network
-    #   - "3306:3306"
+    
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -23,8 +22,7 @@ services:
     build: ./backend
     container_name: g03_backend
     restart: unless-stopped
-    # ports: ลบออกเพื่อความปลอดภัย - Backend เข้าถึงได้ผ่าน reverse proxy (course_proxy) เท่านั้น
-    #   - "5001:5001"
+    
     environment:
       - PORT=5001
       - MYSQL_HOST=db
@@ -45,7 +43,6 @@ services:
     container_name: g03_app
     restart: unless-stopped
     ports:
-      # Map frontend to port 8003 (http://localhost:8003)
       - "8003:80"
     depends_on:
       - backend
