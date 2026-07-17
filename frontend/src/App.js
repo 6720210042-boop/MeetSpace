@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import MyBookings from './pages/MyBookings';
 import AdminPanel from './pages/AdminPanel';
@@ -28,6 +29,11 @@ function App() {
           <Route 
             path="/login" 
             element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />}
+          />
+
+          <Route 
+            path="/register" 
+            element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />}
           />
           
           <Route 

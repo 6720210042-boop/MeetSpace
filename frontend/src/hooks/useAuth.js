@@ -5,15 +5,19 @@ export const useAuth = () => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const error = null;
-
   useEffect(() => {
     // Check if user is already logged in
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
 
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+    if (storedToken && storedUser && storedUser !== "undefined") {
+      try {
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Error parsing user from localStorage:", e);
+        localStorage.removeItem('user');
+      }
     }
     setLoading(false);
   }, []);

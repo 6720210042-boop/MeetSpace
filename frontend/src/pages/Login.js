@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Login.css';
 import { authService } from '../services';
 
@@ -22,7 +22,6 @@ const Login = ({ onLogin }) => {
     try {
       const res = await authService.login(form.email, form.password);
       onLogin(res.user, res.token);
-      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'เข้าสู่ระบบไม่สำเร็จ');
     } finally {
@@ -70,6 +69,10 @@ const Login = ({ onLogin }) => {
             <button className="google-login-btn" type="submit" disabled={loading}>
               {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
             </button>
+            
+            <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem' }}>
+              ยังไม่มีบัญชีใช่ไหม? <Link to="/register" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontWeight: '500' }}>สมัครสมาชิกที่นี่</Link>
+            </div>
           </form>
         </div>
       </div>

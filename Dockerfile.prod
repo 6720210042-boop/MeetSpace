@@ -1,0 +1,29 @@
+# Stage 1: Build the React Frontend
+FROM node:20-alpine AS frontend-build
+
+WORKDIR /app/frontend
+
+COPY frontend/package*.json ./
+RUN npm install
+
+COPY frontend/ ./
+# URL /api สำหรับให้ Frontend ยิงหา Backend ในตัวมันเองผ่าน reverse proxy / routing ภายใน
+ENV REACT_APP_API_URL=/api
+RUN npm run build
+
+# Stage 2: Build the Node.js Backend and serve the Frontend
+FROM node:20-alpine
+
+WORKDIR /app/backend
+
+COPY backend/package*.json ./
+RUN npm install --omit=dev
+
+COPY backend/ ./
+
+# ก๊อปปี้ไฟล์หน้าเว็บที่ build เสร็จแล้วจาก Stage 1 มาไว้ในโฟลเดอร์ public ของ backend
+COPY --from=frontend-build /app/frontend/build ./public
+
+EXPOSE 8000
+
+CMD ["node", "src/server.js"]

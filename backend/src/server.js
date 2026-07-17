@@ -31,6 +31,18 @@ app.use("/api/university-rooms", require("./routes/rooms"));
 app.use("/api/university-bookings", require("./routes/bookings"));
 app.use("/api/reports", require("./routes/reports"));
 
+// Serve static frontend files (Monolith Pattern)
+const path = require("path");
+app.use(express.static(path.join(__dirname, "../public")));
+
+// Catch-all route to serve React index.html for unknown routes (Client-side routing)
+app.get("*", (req, res, next) => {
+  if (req.path.startsWith("/api/")) {
+    return next(); // Let API 404s fall through to the Error Handler
+  }
+  res.sendFile(path.join(__dirname, "../public/index.html"));
+});
+
 // Health Check
 app.get("/api/health", (req, res) => {
   res.status(200).json({
